@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2주차 과제</title>
+    
+    <!--구글폰트 -->
+    <link href="https://fonts.googleapis.com/css?family=Sunflower:300&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- JS -->   
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <!--JavaScript-->
+    <script type="text/javascript">
+        function order() {
+            let name = $('#order_name').val();
+            let count = $('#order_count').val();
+            let address = $('#order_address').val();
+            let phone = $('#order_phone').val();
+            let item = '이어폰';
+
+        $.ajax({
+            type: "POST",
+            url: "http://spartacodingclub.shop/order",
+            data: { name_give:name, count_give:count, address_give:address, phone_give:phone, item_give:item },
+            success: function(response){
+                if(response['result'] == 'success'){
+                alert('주문 완료!');
+                window.location.reload();
+                    }
+                }
+            })
+        }
+
+        $(document).ready(function(){
+            $('#orders-box').html('');
+            listing();
+        });
+
+        function listing() {
+            $.ajax({
+              type: "GET",
+              url: "http://spartacodingclub.shop/order?item_give=이어폰",
+              data: {},
+              success: function(response){
+                 if (response['result'] == 'success') {
+                   let orders = response['orders'];
+                   for (let i = 0; i < orders.length; i++) {
+                     make_card(orders[i]['item'],orders[i]['name'],orders[i]['count'],orders[i]['address'],orders[i]['phone'])
+                 }
+                } else {
+                  alert('주문을 받아오지 못했습니다');
+                }
+            }
+        })
+    }
+
+        function make_card(item,name,count,address,phone) {
+            let temp_html = '<tr>\
+            <td>'+item+'</td>\
+            <td>'+name+'</td>\
+            <td>'+count+'</td>\
+            <td>'+address+'</td>\
+            <td>'+phone+'</td>\
+            </tr>';
+            $('#orders-box').append(temp_html);
+        }
+        </script>
+
+        <!--CSS-->
+        <style>
+            * {
+                font-family: 'Sunflower', sans-serif;
+            }
+            .product_detail_page {
+                margin: 10px;
+            }
+            .product_image {
+                margin: 10px;
+            }
+            .price {
+                font-size: medium;
+            }
+            .product_info {
+                width: 700px;
+                margin-left: 410px;
+            }
+            .order_product {
+                width: 700px;
+                margin-left: 410px;
+            }
+            .buy_butten {
+                width: 300px;
+            }
+
+            .orders {
+                width: 700px;
+                margin-left: 410px;
+                margin-top: 50px;
+
+            </style>
+        </head>
+
+        <body>
+            <div class="product_detail_page">
+                <div class="product_image">
+                    <center>            
+                        <img src = https://post-phinf.pstatic.net/MjAxOTAzMTRfMjEw/MDAxNTUyNTIyMDU5NTA0.4j63aGvPCL5eSVHiyacw4RIcsemN2-XIVbM4fSbXq3og.jmeeAQbp2O4gVqqq3NwxDP2xutYxADAHKAbRMYAbiNog.JPEG/bYWRE7dtXhfWjhurE6VScE.jpg?type=w1200 width="700">
+                    </center>
+                </div>
+
+                <div class="product_info">
+                    <h4>Bang & Olufsen E8 2.0 블루투스 이어폰 <span class='price'>가격 : 380,000 원 / 개</span></h4>
+                    <p class="product_description">탁월함과 편안함을 선사하는 고음질의 무선 이어폰, 진정한 무선 시스템!! <br>뱅앤올룹슨의 사운드 전문 엔지니어들이 직접 튜닝한 Beoplay E8 2.0 은 이미 그 자체로 하이테크 입니다.</p>
+                </div>
+
+                <div class="order_product">
+                    <h4>주문하기</h4>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-default">주문자 성함</span>
+                        </div>
+                        <input type="text" class="form-control" id="order_name" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-default">수량</span>
+                        </div>
+                        <select class="form-control" id="order_count">
+                            <option selected>--수량을 선택하세요--</option>
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-default">주소</span>
+                        </div>
+                        <input type="text" class="form-control" id="order_address" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-default">전화번호</span>
+                        </div>
+                        <input type="text" class="form-control" id="order_phone" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                    </div>
+                </div>
+                <div class="buy_button">
+                    <center>
+                        <button onclick="order()" type="submit" class="btn btn-primary">주문하기</button>
+                    </center>
+                </div>
+
+                <div class="orders">
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">상품명</th>
+                            <th scope="col">이름</th>
+                            <th scope="col">수량</th>
+                            <th scope="col">주소</th>
+                            <th scope="col">전화번호</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-box">
+                        <tr>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>1</td>
+                            <td>Otto</td>
+                            <td>양재동</td>
+                        </tr>  
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+    </html>
